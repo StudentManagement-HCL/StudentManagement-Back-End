@@ -17,10 +17,11 @@ namespace StudentManagementSystem.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AdminSignup>().ToTable("AdminSignup");
-            modelBuilder.Entity<AdminLogin>().ToTable("AdminLogin");
-            modelBuilder.Entity<StudentSignup>().ToTable("StudentSignup");
-            modelBuilder.Entity<StudentLogin>().ToTable("StudentLogin");
+            modelBuilder.Entity<Student>().ToTable("students");
+            modelBuilder.Entity<AdminSignup>().ToTable("adminsignup");
+            modelBuilder.Entity<AdminLogin>().ToTable("adminlogin");
+            modelBuilder.Entity<StudentSignup>().ToTable("studentsignup");
+            modelBuilder.Entity<StudentLogin>().ToTable("studentlogin");
         }
     }
 }
