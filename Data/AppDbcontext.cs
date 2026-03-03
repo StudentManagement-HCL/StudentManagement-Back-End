@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Models;
 
 namespace StudentManagementSystem.Data
@@ -11,6 +12,8 @@ namespace StudentManagementSystem.Data
         public DbSet<AdminLogin> AdminLogin { get; set; }
         public DbSet<StudentSignup> StudentSignup { get; set; }
         public DbSet<StudentLogin> StudentLogin { get; set; }
+
+        public DbSet<Student> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

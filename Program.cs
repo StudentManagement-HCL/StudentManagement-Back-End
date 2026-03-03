@@ -7,15 +7,20 @@ using StudentManagementSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB
+// =====================
+// DATABASE
+// =====================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
-// JWT
+// =====================
+// JWT AUTHENTICATION
+// =====================
 var jwtKey = builder.Configuration["Jwt:Key"];
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -27,15 +32,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddControllers();
 
-// CORS for Angular
+// =====================
+// CORS
+// =====================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -44,16 +53,22 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// =====================
+// MIDDLEWARE
+// =====================
 app.UseSwagger();
 app.UseSwaggerUI();
+
 app.UseCors("AllowAngular");
-app.UseAuthentication();
+
+app.UseAuthentication();   // IMPORTANT
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();
