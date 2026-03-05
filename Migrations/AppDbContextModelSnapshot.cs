@@ -130,42 +130,42 @@ namespace StudentManagementSystem.Migrations
                     b.ToTable("StudentLogin", (string)null);
                 });
 
-            modelBuilder.Entity("StudentManagementSystem.Models.StudentSignup", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            //modelBuilder.Entity("StudentManagementSystem.Models.StudentSignup", b =>
+            //    {
+            //        b.Property<int>("StudentId")
+            //            .ValueGeneratedOnAdd()
+            //            .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudentId"));
+            //        MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudentId"));
 
-                    b.Property<string>("DoB")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+            //        b.Property<string>("DoB")
+            //            .IsRequired()
+            //            .HasColumnType("longtext");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+            //        b.Property<string>("Email")
+            //            .IsRequired()
+            //            .HasColumnType("longtext");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+            //        b.Property<string>("FirstName")
+            //            .IsRequired()
+            //            .HasColumnType("longtext");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+            //        b.Property<string>("Gender")
+            //            .IsRequired()
+            //            .HasColumnType("longtext");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+            //        b.Property<string>("LastName")
+            //            .IsRequired()
+            //            .HasColumnType("longtext");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+            //        b.Property<string>("PhoneNumber")
+            //            .IsRequired()
+            //            .HasColumnType("longtext");
 
-                    b.HasKey("StudentId");
+            //        b.HasKey("StudentId");
 
-                    b.ToTable("StudentSignup", (string)null);
-                });
+            //        b.ToTable("StudentSignup", (string)null);
+            //    });
 #pragma warning restore 612, 618
         }
     }

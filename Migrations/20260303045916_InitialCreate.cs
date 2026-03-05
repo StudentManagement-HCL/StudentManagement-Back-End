@@ -92,32 +92,33 @@ namespace StudentManagementSystem.Migrations
                     table.PrimaryKey("PK_Students", x => x.id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "StudentSignup",
-                columns: table => new
-                {
-                    StudentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    LastName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Gender = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DoB = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentSignup", x => x.StudentId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
         }
+
+        //    migrationBuilder.CreateTable(
+        //        name: "StudentSignup",
+        //        columns: table => new
+        //        {
+        //            StudentId = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+        //            FirstName = table.Column<string>(type: "longtext", nullable: false)
+        //                .Annotation("MySql:CharSet", "utf8mb4"),
+        //            LastName = table.Column<string>(type: "longtext", nullable: false)
+        //                .Annotation("MySql:CharSet", "utf8mb4"),
+        //            Gender = table.Column<string>(type: "longtext", nullable: false)
+        //                .Annotation("MySql:CharSet", "utf8mb4"),
+        //            DoB = table.Column<string>(type: "longtext", nullable: false)
+        //                .Annotation("MySql:CharSet", "utf8mb4"),
+        //            Email = table.Column<string>(type: "longtext", nullable: false)
+        //                .Annotation("MySql:CharSet", "utf8mb4"),
+        //            PhoneNumber = table.Column<string>(type: "longtext", nullable: false)
+        //                .Annotation("MySql:CharSet", "utf8mb4")
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_StudentSignup", x => x.StudentId);
+        //        })
+        //        .Annotation("MySql:CharSet", "utf8mb4");
+        //}
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -134,8 +135,8 @@ namespace StudentManagementSystem.Migrations
             migrationBuilder.DropTable(
                 name: "Students");
 
-            migrationBuilder.DropTable(
-                name: "StudentSignup");
+            //migrationBuilder.DropTable(
+            //    name: "StudentSignup");
         }
     }
 }
