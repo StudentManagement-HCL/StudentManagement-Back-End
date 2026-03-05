@@ -1,99 +1,87 @@
-﻿//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using StudentManagementSystem.Data;
-//using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.Data;
+using System.Security.Claims;
 
-//namespace StudentManagementSystem.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    [Authorize(Roles = "Student")]
-//    public class StudentEditController : ControllerBase
-//    {
-//        private readonly AppDbContext _context;
+namespace StudentManagementSystem.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(Roles = "Student")]
+    public class StudentEditController : ControllerBase
+    {
+        private readonly AppDbContext _context;
 
-//        public StudentEditController(AppDbContext context)
-//        {
-//            _context = context;
-//        }
+        public StudentEditController(AppDbContext context)
+        {
+            _context = context;
+        }
 
-//        // GET api/studentedit/profile
-//        [HttpGet("profile")]
-//        public async Task<IActionResult> GetProfile()
-//        {
-//            var studentIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-//            if (studentIdClaim == null) return Unauthorized();
+        // GET api/studentedit/profile
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (email == null) return Unauthorized();
 
-//            int studentId = int.Parse(studentIdClaim);
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.email == email);
 
-//            var student = await _context.StudentSignup
-//                .FirstOrDefaultAsync(s => s.StudentId == studentId);
+            if (student == null)
+                return NotFound(new { message = "Student not found." });
 
-//            if (student == null) return NotFound(new { message = "Student not found." });
+            return Ok(new
+            {
+                id = student.id,
+                name = student.name,
+                email = student.email,
+                age = student.age,
+                department = student.department,
+                dob = student.dob,
+                phone = student.phone,
+                city = student.city,
+                state = student.state
+            });
+        }
 
-//            // Find matching student record by email
-//            var studentDetails = await _context.Students
-//                .FirstOrDefaultAsync(s => s.email == student.Email);
+        // PUT api/studentedit/update
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateProfile([FromBody] StudentUpdateRequest request)
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (email == null) return Unauthorized();
 
-//            return Ok(new
-//            {
-//                firstName = student.FirstName,
-//                lastName = student.LastName,
-//                email = student.Email,
-//                phone = studentDetails?.phone ?? student.PhoneNumber,
-//                city = studentDetails?.city ?? "",
-//                state = studentDetails?.state ?? ""
-//            });
-//        }
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.email == email);
 
-//        // PUT api/studentedit/update
-//        [HttpPut("update")]
-//        public async Task<IActionResult> UpdateProfile([FromBody] StudentUpdateRequest request)
-//        {
-//            var studentIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-//            if (studentIdClaim == null) return Unauthorized();
+            if (student == null)
+                return NotFound(new { message = "Student not found." });
 
-//            int studentId = int.Parse(studentIdClaim);
+            // Only allow updating phone, city, state
+            student.phone = request.Phone;
+            student.city = request.City;
+            student.state = request.State;
 
-//            var studentSignup = await _context.StudentSignup
-//                .FirstOrDefaultAsync(s => s.StudentId == studentId);
+            await _context.SaveChangesAsync();
 
-//            if (studentSignup == null) return NotFound(new { message = "Student not found." });
+            return Ok(new
+            {
+                message = "Profile updated successfully.",
+                name = student.name,
+                email = student.email,
+                department = student.department,
+                phone = student.phone,
+                city = student.city,
+                state = student.state
+            });
+        }
+    }
 
-//            // Update phone in StudentSignup table
-//            studentSignup.PhoneNumber = request.Phone;
-
-//            // Find or update in Students table
-//            var studentDetails = await _context.Students
-//                .FirstOrDefaultAsync(s => s.email == studentSignup.Email);
-
-//            if (studentDetails != null)
-//            {
-//                studentDetails.phone = request.Phone;
-//                studentDetails.city = request.City;
-//                studentDetails.state = request.State;
-//            }
-
-//            await _context.SaveChangesAsync();
-
-//            return Ok(new
-//            {
-//                message = "Profile updated successfully.",
-//                phone = request.Phone,
-//                city = request.City,
-//                state = request.State,
-//                firstName = studentSignup.FirstName,
-//                lastName = studentSignup.LastName,
-//                email = studentSignup.Email
-//            });
-//        }
-//    }
-
-//    public class StudentUpdateRequest
-//    {
-//        public string Phone { get; set; }
-//        public string City { get; set; }
-//        public string State { get; set; }
-//    }
-//}
+    public class StudentUpdateRequest
+    {
+        public string Phone { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+    }
+}
