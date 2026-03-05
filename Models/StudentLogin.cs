@@ -7,6 +7,7 @@ namespace StudentManagementSystem.Models
         [Key]
         public int StudentId { get; set; }
         [MaxLength(255)]
-        public string Password { get; set; }
+        public string Email { get; set; }
+        public DateTime dob { get; set; }
     }
 }

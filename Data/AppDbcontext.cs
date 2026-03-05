@@ -10,7 +10,7 @@ namespace StudentManagementSystem.Data
 
         public DbSet<AdminSignup> AdminSignup { get; set; }
         public DbSet<AdminLogin> AdminLogin { get; set; }
-        public DbSet<StudentSignup> StudentSignup { get; set; }
+        //public DbSet<StudentSignup> StudentSignup { get; set; }
         public DbSet<StudentLogin> StudentLogin { get; set; }
 
         public DbSet<Student> Students { get; set; }
@@ -20,7 +20,7 @@ namespace StudentManagementSystem.Data
             modelBuilder.Entity<Student>().ToTable("students");
             modelBuilder.Entity<AdminSignup>().ToTable("adminsignup");
             modelBuilder.Entity<AdminLogin>().ToTable("adminlogin");
-            modelBuilder.Entity<StudentSignup>().ToTable("studentsignup");
+            //modelBuilder.Entity<StudentSignup>().ToTable("studentsignup");
             modelBuilder.Entity<StudentLogin>().ToTable("studentlogin");
         }
     }

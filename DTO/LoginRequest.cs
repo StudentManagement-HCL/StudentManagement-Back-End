@@ -1,8 +1,12 @@
-﻿namespace StudentManagementSystem.DTO
+﻿using Microsoft.VisualBasic;
+
+namespace StudentManagementSystem.DTO
 {
     public class LoginRequest
     {
+        
         public string Email { get; set; }
-        public string Password { get; set; }
+       public string Password { get; set; }
+      
     }
 }

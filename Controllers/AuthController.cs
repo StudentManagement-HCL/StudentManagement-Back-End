@@ -60,7 +60,8 @@ namespace StudentManagementSystem.Controllers
 
             var loginData = await _context.AdminLogin.FindAsync(admin.AdminId);
             if (loginData == null || !BCrypt.Net.BCrypt.Verify(request.Password, loginData.Password))
-                return Unauthorized(new { message = "Invalid credentials." });
+             //if(loginData==null)   
+                 return Unauthorized(new { message = "Invalid credentials." });
 
             var token = _jwtService.GenerateToken(admin.AdminId, admin.Email, "Admin", admin.FirstName + " " + admin.LastName);
 
@@ -73,55 +74,67 @@ namespace StudentManagementSystem.Controllers
             });
         }
 
-        // POST api/auth/student/register
-        [HttpPost("student/register")]
-        public async Task<IActionResult> RegisterStudent([FromBody] StudentRegisterRequest request)
-        {
-            var exists = await _context.StudentSignup.AnyAsync(s => s.Email == request.Email);
-            if (exists) return BadRequest(new { message = "Email already registered." });
+        //// POST api/auth/student/register
+        //[HttpPost("student/register")]
+        //public async Task<IActionResult> RegisterStudent([FromBody] StudentRegisterRequest request)
+        //{
+        //    var exists = await _context.StudentSignup.AnyAsync(s => s.Email == request.Email);
+        //    if (exists) return BadRequest(new { message = "Email already registered." });
 
-            var student = new StudentSignup
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Gender = request.Gender,
-                DoB = request.DoB,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber
-            };
+        //    var student = new StudentSignup
+        //    {
+        //        FirstName = request.FirstName,
+        //        LastName = request.LastName,
+        //        Gender = request.Gender,
+        //        DoB = request.DoB,
+        //        Email = request.Email,
+        //        PhoneNumber = request.PhoneNumber
+        //    };
 
-            _context.StudentSignup.Add(student);
-            await _context.SaveChangesAsync();
+        //    _context.StudentSignup.Add(student);
+        //    await _context.SaveChangesAsync();
 
-            var loginEntry = new StudentLogin
-            {
-                StudentId = student.StudentId,
-                Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
-            };
-            _context.StudentLogin.Add(loginEntry);
-            await _context.SaveChangesAsync();
+        //    var loginEntry = new StudentLogin
+        //    {
+        //        StudentId = student.StudentId,
+        //        Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
+        //    };
+        //    _context.StudentLogin.Add(loginEntry);
+        //    await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Student registered successfully." });
-        }
+        //    return Ok(new { message = "Student registered successfully." });
+        //}
         // POST api/auth/student/login
         [HttpPost("student/login")]
         public async Task<IActionResult> StudentLogin([FromBody] LoginRequest request)
         {
-            var student = await _context.StudentSignup.FirstOrDefaultAsync(s => s.Email == request.Email);
-            if (student == null) return Unauthorized(new { message = "Invalid credentials." });
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.email == request.Email);
 
-            var loginData = await _context.StudentLogin.FindAsync(student.StudentId);
-            if (loginData == null || !BCrypt.Net.BCrypt.Verify(request.Password, loginData.Password))
+            if (student == null)
                 return Unauthorized(new { message = "Invalid credentials." });
 
-            var token = _jwtService.GenerateToken(student.StudentId, student.Email, "Student", student.FirstName + " " + student.LastName);
+            // Password = DOB check
+            DateTime inputDob;
+            if (!DateTime.TryParse(request.Password, out inputDob))
+                return Unauthorized(new { message = "Password must be your DOB." });
+
+            if (student.dob == null || student.dob.Value.Date != inputDob.Date)
+                return Unauthorized(new { message = "Invalid credentials." });
+
+            var token = _jwtService.GenerateToken(
+                student.id,
+                student.email,
+                "Student",
+                student.name
+            );
 
             return Ok(new LoginResponse
             {
                 Token = token,
                 Role = "Student",
-                UserId = student.StudentId,
-                Name = student.FirstName + " " + student.LastName
+                UserId = student.id,
+                Name = student.name
             });
         }
     }
